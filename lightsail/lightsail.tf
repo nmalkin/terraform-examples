@@ -9,9 +9,9 @@ resource "aws_lightsail_instance" "server" {
   for_each          = var.services
   name              = "${each.key}-instance"
   availability_zone = var.availability_zone
-  blueprint_id      = "ubuntu_18_04"
+  blueprint_id      = each.value["blueprint_id"]
   # Choose your instance size here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lightsail_instance#bundles
-  bundle_id     = "nano_2_0"
+  bundle_id     = each.value["bundle_id"]
   key_pair_name = var.key_name
   tags = {
     owner = var.owner
@@ -45,7 +45,7 @@ data "aws_route53_zone" "domain_zone" {
 resource "aws_route53_record" "server_record" {
   for_each = var.services
   zone_id  = data.aws_route53_zone.domain_zone.zone_id
-  name     = each.value
+  name     = each.value["domain"]
   type     = "A"
   ttl      = 60
   records  = [aws_lightsail_static_ip.ip[each.key].ip_address]

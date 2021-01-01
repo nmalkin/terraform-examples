@@ -8,4 +8,4 @@ variable "owner" {}
 # Either way, check the private_key field in lightsail.tf to make sure it points to the right location.
 variable "key_name" {}
 
-variable "services" { type = map(string) }
+variable "services" { type = map(map(string)) }
